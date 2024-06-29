@@ -28,6 +28,7 @@ def main(request):
 
     body_flag = False
 
+    print(type(data))
     print(data)
 
     # try:
