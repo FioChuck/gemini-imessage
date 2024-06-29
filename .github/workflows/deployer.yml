@@ -86,7 +86,3 @@ jobs:
           --min-instances=1 \
           --memory=1Gi \
           --source=gs://${{vars.TWILIO_SOURCE_GCS}}/twilio.zip \
-          --set-env-vars HMAC_VAL=${{secrets.HMAC}} \
-          --set-env-vars PROJECT=${{secrets.PROJECT}} \
-          --set-env-vars GCS_BUCKET=${{vars.TWILIO_IMAGES}} \
-          --set-env-vars LOCATIONS=${{vars.LOCATIONS}}"
