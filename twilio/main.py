@@ -28,8 +28,9 @@ def main(request):
 
     body_flag = False
 
-    print(type(data))
-    print(data)
+    # print(type(data))
+    for item in data:
+        print(item)
 
     # try:
     #     if data["Body"] != "":
