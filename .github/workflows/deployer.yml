@@ -22,7 +22,7 @@ jobs:
 
       - name: "create gcs bucket for twilio function code"
         continue-on-error: true
-        run: "gcloud storage buckets create gs://${{vars.TWILIO_SOURCE_GCS}}"
+        run: "gcloud storage buckets create gs://cf-imessage-code"
 
   build:
     runs-on: ubuntu-latest
@@ -46,7 +46,7 @@ jobs:
         uses: "google-github-actions/upload-cloud-storage@v1"
         with:
           path: "twilio"
-          destination: ${{vars.TWILIO_SOURCE_GCS}}
+          destination: "cf-imessage-code"
           gzip: true
 
   deploy-twilio:
@@ -66,7 +66,7 @@ jobs:
           version: ">= 363.0.0"
 
       - name: "copy source code directory"
-        run: "gsutil cp -r gs://${{vars.TWILIO_SOURCE_GCS}}/twilio ."
+        run: "gsutil cp -r gs://cf-imessage-code/twilio ."
 
       - name: "list files"
         run: "cd twilio; ls"
@@ -75,14 +75,14 @@ jobs:
         run: "cd twilio; ls; zip twilio.zip *"
 
       - name: "upload source code"
-        run: "gsutil cp twilio/twilio.zip gs://${{vars.TWILIO_SOURCE_GCS}}"
+        run: "gsutil cp twilio/twilio.zip gs://cf-imessage-code"
 
       - name: "deploy cloud function using gcloud"
         run:
-          "gcloud  functions deploy twilio-endpoint --region=${{vars.LOCATION}} \
+          "gcloud  functions deploy twilio-endpoint --region=us-central1 \
           --runtime=python39 --gen2 --entry-point=main \
           --trigger-http \
           --allow-unauthenticated \
           --min-instances=1 \
           --memory=1Gi \
-          --source=gs://${{vars.TWILIO_SOURCE_GCS}}/twilio.zip"
+          --source=gs://cf-imessage-code/twilio.zip"
