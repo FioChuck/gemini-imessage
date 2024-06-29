@@ -1,0 +1,9 @@
+# Function dependencies, for example:
+# package>=version
+requests
+google-cloud-pubsub
+google-cloud-bigquery
+google-cloud-storage
+google-cloud-aiplatform
+firebase-admin
+python-dotenv
