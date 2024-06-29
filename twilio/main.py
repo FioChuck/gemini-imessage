@@ -7,6 +7,8 @@ from compute import *
 @functions_framework.http
 def main(request):
 
+    print(request)
+
     data = request.form
 
     if request.method == "OPTIONS":
@@ -59,15 +61,15 @@ def main(request):
     #     url = ""
     #     body = data["Body"]
 
-    # print("starting threaded app")
+    print("starting threaded app")
 
-    # thread = threading.Thread(target=run, kwargs={
-    #     'dtype': dtype,
-    #     'body': body,
-    #     'num_media': data["NumMedia"],
-    #     'sms_sid': data["SmsSid"],
-    #     'sms_from': data["From"],
-    #     'media_url': url})
-    # thread.start()
+    thread = threading.Thread(target=run, kwargs={
+        'dtype': dtype,
+        'body': body,
+        'num_media': data["NumMedia"],
+        'sms_sid': data["SmsSid"],
+        'sms_from': data["From"],
+        'media_url': url})
+    thread.start()
 
     return ("done", 200, headers)
