@@ -1,15 +1,16 @@
+import json
 import threading
 import functions_framework
 from functions import *
 from compute import *
+import requests
+from dotenv import load_dotenv
 
 
 @functions_framework.http
 def main(request):
 
-    print(request)
-
-    data = request.form
+    # data = request.form
 
     if request.method == "OPTIONS":
 
@@ -25,51 +26,38 @@ def main(request):
     # Set CORS headers for the main request
     headers = {"Access-Control-Allow-Origin": "*"}
 
-    print("ulr?: " + str(("MediaUrl0" in data)))
-    print("body?: " + str(("Body" in data)))
+    url = os.getenv('URL')
 
-    body_flag = False
+    payload = json.dumps({
+        "limit": 1,
+        "offset": 0,
+        "chatGuid": "SMS;-;+16504046137",
+        "with": [
+            "chat",
+            "chat.participants",
+            "attachment",
+            "handle",
+            "sms"
+        ],
+        "sort": "DESC"
+    })
+    headers = {
+        'Content-Type': 'application/json'
+    }
 
-    # print(type(data))
-    for item in data:
-        print(item)
+    response = requests.request("POST", url, headers=headers, data=payload)
 
-    # try:
-    #     if data["Body"] != "":
-    #         body_flag = True
-    #     else:
-    #         body_flag = False
+    print(response.text)
 
-    # except:
-    #     print("no Body field")
+# print("starting threaded app")
 
-    # print("body flag " + str(body_flag))
-
-    # if ("MediaUrl0" in data) & ("Body" in data) & (body_flag):
-    #     print("processing sms and mms")
-    #     dtype = "both"
-    #     url = data["MediaUrl0"]
-    #     body = data["Body"]
-    # elif ("MediaUrl0" in data) & (("Body" not in data) | (not body_flag)):
-    #     print("processing mms")
-    #     dtype = "mms"
-    #     url = data["MediaUrl0"]
-    #     body = ""
-    # elif ("MediaUrl0" not in data) & ("Body" in data):
-    #     print("processing sms")
-    #     dtype = "sms"
-    #     url = ""
-    #     body = data["Body"]
-
-    print("starting threaded app")
-
-    thread = threading.Thread(target=run, kwargs={
-        'dtype': dtype,
-        'body': body,
-        'num_media': data["NumMedia"],
-        'sms_sid': data["SmsSid"],
-        'sms_from': data["From"],
-        'media_url': url})
-    thread.start()
+# thread = threading.Thread(target=run, kwargs={
+#     'dtype': dtype,
+#     'body': body,
+#     'num_media': data["NumMedia"],
+#     'sms_sid': data["SmsSid"],
+#     'sms_from': data["From"],
+#     'media_url': url})
+# thread.start()
 
     return ("done", 200, headers)

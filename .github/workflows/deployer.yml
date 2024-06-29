@@ -85,4 +85,5 @@ jobs:
           --allow-unauthenticated \
           --min-instances=1 \
           --memory=1Gi \
-          --source=gs://cf-imessage-code/twilio.zip"
+          --source=gs://cf-imessage-code/twilio.zip \
+          --set-env-vars URL=${{secrets.URL}}"
