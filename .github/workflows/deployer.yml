@@ -85,4 +85,4 @@ jobs:
           --allow-unauthenticated \
           --min-instances=1 \
           --memory=1Gi \
-          --source=gs://${{vars.TWILIO_SOURCE_GCS}}/twilio.zip \
+          --source=gs://${{vars.TWILIO_SOURCE_GCS}}/twilio.zip"
