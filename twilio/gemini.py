@@ -1,5 +1,7 @@
 from google.cloud import storage
 from datetime import datetime
+import vertexai
+from vertexai.generative_models import GenerativeModel
 
 
 def prepend_to_gcs_file(bucket_name, file_name, text_to_prepend):
@@ -19,6 +21,17 @@ def prepend_to_gcs_file(bucket_name, file_name, text_to_prepend):
     blob.upload_from_string(new_content)
 
 
+def generate_response():
+    print("done")
+
+    vertexai.init(project="fiorenza-house-hunt", location="us-central1")
+
+    model = GenerativeModel("gemini-1.0-pro-002")
+    response = model.generate_content("Write a story about a magic backpack.")
+
+    print(response)
+
+
 def update_context(message):
     # Example usage
     bucket_name = "cf-imessage-status"
@@ -32,4 +45,7 @@ def update_context(message):
         str(event_time) + ". Content: " + "This is a test response" + "\n"
 
     prepend_to_gcs_file(bucket_name, file_name, received)
+
+    generate_response()
+
     prepend_to_gcs_file(bucket_name, file_name, sent)
