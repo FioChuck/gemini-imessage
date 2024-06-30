@@ -24,8 +24,8 @@ def update_context(message):
     bucket_name = "cf-imessage-status"
     file_name = "context.txt"
 
-    event_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
-    received = "Received: " + ["data"][0]["text"] + "\n"
+    event_time = "\n" + datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f") + "\n"
+    received = "Received: " + message["data"][0]["text"] + "\n"
     sent = "Sent: " + "This is a test response" + "\n"
 
     prepend_to_gcs_file(bucket_name, file_name, str(event_time))
