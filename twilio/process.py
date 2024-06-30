@@ -2,6 +2,7 @@ import json
 
 from functions import *
 from compute import *
+from gemini import *
 import requests
 
 
@@ -14,8 +15,8 @@ def download_text_from_gcs(project_id, bucket_name, file_name):
 
     text_content = blob.download_as_text()
 
-    print(
-        f"File {file_name} downloaded from bucket {bucket_name} in project {project_id}")
+    # print(
+    #     f"File {file_name} downloaded from bucket {bucket_name} in project {project_id}")
     return text_content
 
 
@@ -28,8 +29,8 @@ def upload_text_to_gcs(project_id, bucket_name, file_name, text_content):
 
     blob.upload_from_string(text_content, content_type='text/plain')
 
-    print(
-        f"File {file_name} uploaded to bucket {bucket_name} in project {project_id}")
+    # print(
+    #     f"File {file_name} uploaded to bucket {bucket_name} in project {project_id}")
 
 
 def run(**kwargs):
@@ -69,16 +70,19 @@ def run(**kwargs):
 
         if text_content != response_dict["data"][0]["text"] and response_dict["data"][0]["isFromMe"] is not True:
             print("-------------------------------")
-            print("new message received!")
-            print("message says: " + response_dict["data"][0]["text"])
+            print("New Message Received!")
+            print("Message Says: " + response_dict["data"][0]["text"])
             print("-------------------------------")
 
             text_content = str(response_dict["data"][0]["text"])
 
             upload_text_to_gcs(project_id, bucket_name,
                                file_name, text_content)
+
+            update_context(response_dict)
+
         else:
-            print("invalid message")
+            print("Invalid Message - Either wrong sender or is from me")
 
     except Exception as e:
         print(e)

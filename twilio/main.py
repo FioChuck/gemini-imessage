@@ -4,6 +4,7 @@ import functions_framework
 from functions import *
 from compute import *
 from process import *
+from gemini import *
 from datetime import datetime
 
 
