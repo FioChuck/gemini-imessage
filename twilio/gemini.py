@@ -28,6 +28,6 @@ def update_context(message):
     received = "Received: " + ["data"][0]["text"] + "\n"
     sent = "Sent: " + "This is a test response" + "\n"
 
-    prepend_to_gcs_file(bucket_name, file_name, event_time)
+    prepend_to_gcs_file(bucket_name, file_name, str(event_time))
     prepend_to_gcs_file(bucket_name, file_name, received)
     prepend_to_gcs_file(bucket_name, file_name, sent)
