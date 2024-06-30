@@ -3,6 +3,8 @@ from datetime import datetime
 import vertexai
 from vertexai.generative_models import GenerativeModel
 
+from twilio.process import *
+
 
 def prepend_to_gcs_file(bucket_name, file_name, text_to_prepend):
     """Prepends text to the top of a file in Google Cloud Storage."""
@@ -27,7 +29,12 @@ def generate_response():
     vertexai.init(project="fiorenza-house-hunt", location="us-central1")
 
     model = GenerativeModel("gemini-1.0-pro-002")
-    response = model.generate_content("Write a story about a magic backpack.")
+
+    context = download_text_from_gcs("fiorenza-house-hunt",
+                                     "cf-imessage-status", "context.txt")
+
+    response = model.generate_content(
+        "You are an intelligent text message responding agent named Chas Fiorenza. Please respond to this conversation in short casual form: " + context)
 
     print(response)
 
