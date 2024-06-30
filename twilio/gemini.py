@@ -3,7 +3,7 @@ from datetime import datetime
 import vertexai
 from vertexai.generative_models import GenerativeModel
 
-from twilio.process import *
+from process import *
 
 
 def prepend_to_gcs_file(bucket_name, file_name, text_to_prepend):
