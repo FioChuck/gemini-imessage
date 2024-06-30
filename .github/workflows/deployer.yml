@@ -86,4 +86,5 @@ jobs:
           --min-instances=1 \
           --memory=1Gi \
           --source=gs://cf-imessage-code/twilio.zip \
-          --set-env-vars URL=${{secrets.URL}}"
+          --set-env-vars URL=${{secrets.URL}} \ 
+          --set-env-vars SENDER=${{secrets.SENDER}}"

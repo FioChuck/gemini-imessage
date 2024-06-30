@@ -37,11 +37,12 @@ def run(**kwargs):
     try:
 
         url = os.getenv('URL')
+        sender = os.getenv('SENDER')
 
         payload = json.dumps({
             "limit": 1,
             "offset": 0,
-            "chatGuid": "SMS;-;+16504046137",
+            "chatGuid": "SMS;-;" + sender,
             "with": [
                 "chat",
                 "chat.participants",
@@ -59,14 +60,14 @@ def run(**kwargs):
 
         response_dict = response.json()
 
-        project_id = "fiorenza-house-hunt"  # Replace with your actual project ID
+        project_id = "fiorenza-house-hunt"
         bucket_name = "cf-imessage-status"
         file_name = "status.txt"
 
         text_content = download_text_from_gcs(
             project_id, bucket_name, file_name)
 
-        if text_content != response_dict["data"][0]["text"] and response_dict["data"][0]["isFromMe"] is False:
+        if text_content != response_dict["data"][0]["text"] and response_dict["data"][0]["isFromMe"] is not True:
             print("-------------------------------")
             print("new message received!")
             print("message says: " + response_dict["data"][0]["text"])
@@ -76,6 +77,8 @@ def run(**kwargs):
 
             upload_text_to_gcs(project_id, bucket_name,
                                file_name, text_content)
+        else:
+            print("invalid message")
 
     except Exception as e:
         print(e)
