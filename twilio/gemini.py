@@ -48,7 +48,7 @@ def generate_response():
 
 
 def update_context(message):
-    # Example usage
+
     bucket_name = "cf-imessage-status"
     file_name = "context.txt"
 
