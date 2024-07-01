@@ -2,6 +2,11 @@ from google.cloud import storage
 from datetime import datetime
 import vertexai
 from vertexai.generative_models import GenerativeModel
+import threading
+import json
+import requests
+import os
+import uuid
 
 
 def load_context(project_id, bucket_name, file_name):
@@ -57,6 +62,31 @@ def generate_response():
     return response.text
 
 
+def send_response(content):
+
+    my_uuid = uuid.uuid4()
+
+    bb_url = os.getenv('BB_URL')
+    pw = os.getenv('PW')
+    sender = os.getenv('SENDER')
+
+    url = bb_url + "/api/v1/message/text?password=" + pw
+
+    payload = json.dumps({
+        "chatGuid": "SMS;-;" + sender,
+        "tempGuid": my_uuid,
+        "message": content,
+        "partIndex": 0
+    })
+    headers = {
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+
+    print(response.text)
+
+
 def update_context(message):
 
     bucket_name = "cf-imessage-status"
@@ -70,6 +100,9 @@ def update_context(message):
     prepend_to_gcs_file(bucket_name, file_name, received)
 
     gemini_text = generate_response()
+
+    thread = threading.Thread(target=send_response, args=(gemini_text))
+    thread.start()
 
     sent = "Sent at " + \
         str(event_time) + ". Content: " + gemini_text + "\n"

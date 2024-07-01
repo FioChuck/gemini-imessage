@@ -3,6 +3,7 @@ from functions import *
 from compute import *
 from gemini import *
 import requests
+import uuid
 
 
 def download_text_from_gcs(project_id, bucket_name, file_name):
@@ -31,8 +32,11 @@ def run(**kwargs):
 
     try:
 
-        url = os.getenv('URL')
+        bb_url = os.getenv('BB_URL')
         sender = os.getenv('SENDER')
+        pw = os.getenv('PW')
+
+        url = bb_url + "/api/v1/message/query?password=" + pw
 
         payload = json.dumps({
             "limit": 1,
@@ -80,7 +84,8 @@ def run(**kwargs):
             update_context(response_dict)
 
         else:
-            print("Invalid Message - Either wrong contact or message is from sender")
+            print(
+                "Invalid Message - Either wrong contact, duplicate message, or message is from sender")
 
     except Exception as e:
         print(e)
