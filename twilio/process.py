@@ -1,5 +1,4 @@
 import json
-
 from functions import *
 from compute import *
 from gemini import *
@@ -7,30 +6,25 @@ import requests
 
 
 def download_text_from_gcs(project_id, bucket_name, file_name):
-    """Downloads text content from a file in GCS."""
 
-    storage_client = storage.Client(project=project_id)  # Specify project ID
+    storage_client = storage.Client(project=project_id)
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(file_name)
 
     text_content = blob.download_as_text()
 
-    # print(
-    #     f"File {file_name} downloaded from bucket {bucket_name} in project {project_id}")
     return text_content
 
 
 def upload_text_to_gcs(project_id, bucket_name, file_name, text_content):
-    """Uploads text content to a file in GCS."""
 
-    storage_client = storage.Client(project=project_id)  # Specify project ID
+    storage_client = storage.Client(project=project_id)
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(file_name)
 
     blob.upload_from_string(text_content, content_type='text/plain')
 
-    # print(
-    #     f"File {file_name} uploaded to bucket {bucket_name} in project {project_id}")
+    return "complete"
 
 
 def run(**kwargs):
