@@ -33,7 +33,7 @@ def generate_response():
 
     vertexai.init(project="fiorenza-house-hunt", location="us-central1")
 
-    model = GenerativeModel("gemini-1.0-pro-002")
+    model = GenerativeModel("gemini-1.5-pro-001")
 
     context = load_context(
         "fiorenza-house-hunt", "cf-imessage-status", "context.txt")
