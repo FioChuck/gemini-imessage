@@ -30,7 +30,6 @@ def prepend_to_gcs_file(bucket_name, file_name, text_to_prepend):
 
 
 def generate_response():
-    print("done")
 
     vertexai.init(project="fiorenza-house-hunt", location="us-central1")
 

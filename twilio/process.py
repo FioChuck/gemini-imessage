@@ -53,6 +53,8 @@ def run(**kwargs):
 
         response = requests.request("POST", url, headers=headers, data=payload)
 
+        print("Request from BlueBubbles: " + str(response.json()))
+
         response_dict = response.json()
 
         project_id = "fiorenza-house-hunt"
@@ -61,6 +63,8 @@ def run(**kwargs):
 
         text_content = download_text_from_gcs(
             project_id, bucket_name, file_name)
+
+        print("Last message received: " + text_content)
 
         if text_content != response_dict["data"][0]["text"] and response_dict["data"][0]["isFromMe"] is not True:
             print("-------------------------------")
@@ -76,7 +80,7 @@ def run(**kwargs):
             update_context(response_dict)
 
         else:
-            print("Invalid Message - Either wrong sender or is from me")
+            print("Invalid Message - Either wrong contact or message is from sender")
 
     except Exception as e:
         print(e)
