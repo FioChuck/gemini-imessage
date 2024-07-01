@@ -68,7 +68,7 @@ def send_response(content):
 
     payload = json.dumps({
         "chatGuid": "SMS;-;" + sender,
-        "tempGuid": my_uuid,
+        "tempGuid": str(my_uuid),
         "message": content,
         "partIndex": 0
     })
