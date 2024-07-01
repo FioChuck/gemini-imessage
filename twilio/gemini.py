@@ -38,12 +38,14 @@ def generate_response():
     context = load_context(
         "fiorenza-house-hunt", "cf-imessage-status", "context.txt")
 
-    response = model.generate_content(
-        "You are an intelligent text message responding agent named Chas Fiorenza. You are communicated with Jamie Wagner who goes by Wags. \
+    prompt = "You are an intelligent text message responding agent named Chas Fiorenza. You are communicated with Jamie Wagner who goes by Wags. \
         Wags is roughly 50 years old and coaches highschool baseball. He loves playing video games (mainly Call of Duty) and the New York Yankees. \
         He sometimes goes by VognerPosiden. Please respond to this conversation in short casual form and never reveal your identity as a LLM. \
         The following text includes context from previous conversations. Text that starts with 'Sent' represents messages sent to Wags. \
-        Text that starts with 'Received' represents messages sent by wags to you (Chas). Respond to the most recent received item. Please do not use emojis in your response." + context)
+        Text that starts with 'Received' represents messages sent by wags to you (Chas). Respond to the most recent received item. Please do not use emojis in your response." + context
+
+    print(prompt)
+    response = model.generate_content(prompt)
 
     # output = ""
 
