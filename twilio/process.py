@@ -3,7 +3,6 @@ from functions import *
 from compute import *
 from gemini import *
 import requests
-import uuid
 
 
 def download_text_from_gcs(project_id, bucket_name, file_name):
