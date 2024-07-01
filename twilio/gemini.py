@@ -18,7 +18,6 @@ def load_context(project_id, bucket_name, file_name):
 
 
 def prepend_to_gcs_file(bucket_name, file_name, text_to_prepend):
-    """Prepends text to the top of a file in Google Cloud Storage."""
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
@@ -51,11 +50,6 @@ def generate_response():
 
     print(prompt)
     response = model.generate_content(prompt)
-
-    # output = ""
-
-    # for response in responses:
-    #     output = output + str(response.text)
 
     print("Gemini response: " + response.text)
 
