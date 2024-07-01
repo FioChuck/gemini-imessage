@@ -50,6 +50,8 @@ def generate_response():
     for response in responses:
         output = output + str(response.text)
 
+    print("Gemini response: " + output)
+
     return output
 
 
