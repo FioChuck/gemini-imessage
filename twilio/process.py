@@ -40,7 +40,7 @@ def run(**kwargs):
         payload = json.dumps({
             "limit": 1,
             "offset": 0,
-            "chatGuid": "SMS;-;" + sender,
+            "chatGuid": sender,
             "with": [
                 "chat",
                 "chat.participants",

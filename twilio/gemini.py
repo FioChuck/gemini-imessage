@@ -81,7 +81,7 @@ def send_response(content):
     url = bb_url + "/api/v1/message/text?password=" + pw
 
     payload = json.dumps({
-        "chatGuid": "SMS;-;" + sender,
+        "chatGuid": sender,
         "tempGuid": str(my_uuid),
         "message": content,
         "partIndex": 0
