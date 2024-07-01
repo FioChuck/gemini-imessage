@@ -95,7 +95,7 @@ def update_context(message):
 
     gemini_text = generate_response()
 
-    thread = threading.Thread(target=send_response, args=(gemini_text))
+    thread = threading.Thread(target=send_response, args=(gemini_text,))
     thread.start()
 
     sent = "Sent at " + \
