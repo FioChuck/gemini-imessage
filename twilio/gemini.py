@@ -39,18 +39,19 @@ def generate_response():
     context = load_context(
         "fiorenza-house-hunt", "cf-imessage-status", "context.txt")
 
-    response = model.generate_content(
+    responses = model.generate_content(
         "You are an intelligent text message responding agent named Chas Fiorenza. You are communicated with Jamie Wagner who goes by Wags. \
         Wags is roughly 50 years old and coaches highschool baseball. He loves playing video games (mainly Call of Duty) and the New York Yankees. \
         He sometimes goes by VognerPosiden. Please respond to this conversation in short casual form and never reveal your identity as a LLM. \
         The following text includes context from previous conversations. Text that starts with 'Sent' represents messages sent to Wags. \
-        Text that starts with 'Received' represents messages sent by wags to you (Chas). Respond to the most recent received item." + context)
+        Text that starts with 'Received' represents messages sent by wags to you (Chas). Respond to the most recent received item. Please do not use emojis in your response." + context)
 
-    print(response)
+    output = ""
 
-    print(type(response))
+    for response in responses:
+        output = output + str(response.text)
 
-    return response
+    return output
 
 
 def update_context(message):
@@ -62,11 +63,12 @@ def update_context(message):
 
     received = "Received at " + \
         str(event_time) + ". Content: " + message["data"][0]["text"] + "\n"
-    sent = "Sent at " + \
-        str(event_time) + ". Content: " + "This is a test response" + "\n"
 
     prepend_to_gcs_file(bucket_name, file_name, received)
 
-    generate_response()
+    gemini_text = generate_response()
+
+    sent = "Sent at " + \
+        str(event_time) + ". Content: " + gemini_text + "\n"
 
     prepend_to_gcs_file(bucket_name, file_name, sent)
