@@ -38,7 +38,7 @@ def remove_trailing_zeros_and_newlines(string):
     return string.rstrip("0\n")  # Remove trailing '0' characters and newlines
 
 
-def generate_response():
+def generate_response(latest_message):
 
     vertexai.init(project="fiorenza-house-hunt", location="us-central1")
 
@@ -66,14 +66,35 @@ def generate_response():
         Text that starts with 'Received' represents messages sent by wags to you/Chas. Respond to the most recent received item; however, reference old messages if necessary. \
         Please make the conversation flow as natural as possible. \
         The message timestamp is included. Please do not use emojis in your response. \
-        If you don't know the answer, please make up an answer. Only return the response; don't include any metadata like timestamp. Previous Chat history: " + context
+        If you don't know the answer, please make up an answer. Only return the response; don't include any metadata like timestamp. \
+        The most recent message from Wags was: " + latest_message +\
+        " Previous Chat history: " + context
 
     print(prompt)
     response = model.generate_content(prompt, safety_settings=safety_settings,)
 
-    print("Gemini response: " + response.text)
+    bucket_name = "cf-imessage-status"
+    file_name = "context.txt"
 
-    output = remove_trailing_zeros_and_newlines(response.text)
+    if hasattr(response, 'text'):
+        print("passed safety filter")
+        output = remove_trailing_zeros_and_newlines(response.text)
+
+        received = "Received at " + \
+            str(datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")) + \
+            ". Content: " + latest_message + "\n"
+
+        prepend_to_gcs_file(bucket_name, file_name, received)
+
+    else:
+        print("failed safety filter")
+        output = "Stop it you potato"
+
+        received = "Received at " + \
+            str(datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")) + \
+            ". Content: " + "redacted content" + "\n"
+
+        prepend_to_gcs_file(bucket_name, file_name, received)
 
     return output
 
@@ -110,13 +131,13 @@ def update_context(message):
 
     # event_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
-    received = "Received at " + \
-        str(datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")) + \
-        ". Content: " + message["data"][0]["text"] + "\n"
+    # received = "Received at " + \
+    #     str(datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")) + \
+    #     ". Content: " + message["data"][0]["text"] + "\n"
 
-    prepend_to_gcs_file(bucket_name, file_name, received)
+    # prepend_to_gcs_file(bucket_name, file_name, received)
 
-    gemini_text = generate_response()
+    gemini_text = generate_response(message["data"][0]["text"])
 
     thread = threading.Thread(target=send_response, args=(gemini_text,))
     thread.start()
