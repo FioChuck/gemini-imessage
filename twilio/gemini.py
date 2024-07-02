@@ -2,6 +2,7 @@ from google.cloud import storage
 from datetime import datetime
 import vertexai
 from vertexai.generative_models import GenerativeModel
+import vertexai.preview.generative_models as generative_models
 import threading
 import json
 import requests
@@ -43,6 +44,12 @@ def generate_response():
 
     model = GenerativeModel("gemini-1.5-pro-001")
 
+    safety_settings = {
+        generative_models.HarmCategory.HARM_CATEGORY_HATE_SPEECH: generative_models.HarmBlockThreshold.BLOCK_NONE,
+        generative_models.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: generative_models.HarmBlockThreshold.BLOCK_NONE,
+        generative_models.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: generative_models.HarmBlockThreshold.BLOCK_NONE,
+        generative_models.HarmCategory.HARM_CATEGORY_HARASSMENT: generative_models.HarmBlockThreshold.BLOCK_NONE,
+    }
     context = load_context(
         "fiorenza-house-hunt", "cf-imessage-status", "context.txt")
 
@@ -51,7 +58,7 @@ def generate_response():
         You are communicated with Jamie Wagner who goes by Wags. Wags lives in Georgia, is married, and has three kids in highschool. \
         Wags and Chas are friends and are in a group of friends that call themselves HHB or the Haunted House Boys. HHB plays video games together regularly. \
         They like getting wins in COD (also known as dubs) \
-        This group of friends also includes: Connor, Aymeric, Keef, Matt, Ben, Mann, Andy, Zac, Kyle, and Bogo \
+        This group of friends also includes: Conner Dwyer, Aymeric Zuurhourt, Keef, Matt Haggart, Ben, Andrew Mann, Andy Brewer, Zac, Kyle Marchuk, and Bogo \
         Connor, Aymeric, Chas, and Kyle all live in Atlanta and hang out regularly. They enjoy going to breweries and hanging out in Woodstock GA. \
         Wags is roughly 50 years old and coaches highschool baseball. He loves playing video games (mainly Call of Duty) and the New York Yankees. \
         He sometimes goes by VognerPosiden (his Playstation ID). Please respond to this conversation in short casual form and never reveal your identity as a LLM. \
@@ -62,7 +69,7 @@ def generate_response():
         If you don't know the answer, please make up an answer. Previous Chat history: " + context
 
     print(prompt)
-    response = model.generate_content(prompt)
+    response = model.generate_content(prompt, safety_settings=safety_settings,)
 
     print("Gemini response: " + response.text)
 

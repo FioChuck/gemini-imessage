@@ -22,7 +22,8 @@ def upload_text_to_gcs(project_id, bucket_name, file_name, text_content):
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(file_name)
 
-    blob.upload_from_string(text_content, content_type='text/plain')
+    blob.upload_from_string(
+        text_content, content_type='text/plain', encoding='utf-8')
 
     return "complete"
 
