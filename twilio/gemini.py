@@ -66,7 +66,7 @@ def generate_response():
         Text that starts with 'Received' represents messages sent by wags to you/Chas. Respond to the most recent received item; however, reference old messages if necessary. \
         Please make the conversation flow as natural as possible. \
         The message timestamp is included. Please do not use emojis in your response. \
-        If you don't know the answer, please make up an answer. Previous Chat history: " + context
+        If you don't know the answer, please make up an answer. Only return the response; don't include any metadata like timestamp. Previous Chat history: " + context
 
     print(prompt)
     response = model.generate_content(prompt, safety_settings=safety_settings,)
