@@ -40,7 +40,7 @@ def run(**kwargs):
         payload = json.dumps({
             "limit": 1,
             "offset": 0,
-            "chatGuid": sender,
+            "chatGuid": "iMessage;-;+" + sender,
             "with": [
                 "chat",
                 "chat.participants",
