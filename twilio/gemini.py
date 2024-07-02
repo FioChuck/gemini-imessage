@@ -68,7 +68,7 @@ def generate_response(latest_message):
         The message timestamp is included. Please do not use emojis in your response. \
         If you don't know the answer, please make up an answer. Only return the response; don't include any metadata like timestamp. \
         The most recent message from Wags was: " + latest_message +\
-        " Previous Chat history: " + context
+        " Previous Chat History: " + context
 
     print(prompt)
     response = model.generate_content(prompt, safety_settings=safety_settings,)
