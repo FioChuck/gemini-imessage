@@ -27,7 +27,7 @@ def upload_text_to_gcs(project_id, bucket_name, file_name, text_content):
     return "complete"
 
 
-def run(**kwargs):
+def run():
 
     try:
 
